@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Container, Card, CardContent, CardActions, Typography, Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
@@ -26,7 +27,7 @@ export default function Projects() {
                     <Grid key={project.id} >
                         <Card sx={{ minHeight: 200, padding: 2 }}>
                             <CardContent>
-                                <Typography variant="h5" gutterBottom>
+                                <Typography  variant="h5" gutterBottom>
                                     {project.title}
                                 </Typography>
                                 <Typography variant="body1">{project.description}</Typography>
