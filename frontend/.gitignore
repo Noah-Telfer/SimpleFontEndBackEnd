@@ -11,6 +11,9 @@
 # production
 /build
 
+# PDFs for dev
+/src/assets/tempData
+
 # misc
 .DS_Store
 .env.local
