@@ -1,6 +1,8 @@
 import React from 'react';
 
 import { Container, Card, CardContent, CardActions, Typography, Button } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+
 import Grid from '@mui/material/Grid';
 
 const projects = [
@@ -27,7 +29,7 @@ export default function Projects() {
                     <Grid key={project.id} >
                         <Card sx={{ minHeight: 200, padding: 2 }}>
                             <CardContent>
-                                <Typography  variant="h5" gutterBottom>
+                                <Typography  component={RouterLink} to={`/projects/${project.id}`} variant="h5" gutterBottom>
                                     {project.title}
                                 </Typography>
                                 <Typography variant="body1">{project.description}</Typography>
