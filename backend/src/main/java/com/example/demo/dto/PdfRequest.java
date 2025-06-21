@@ -1,41 +1,18 @@
 package com.example.demo.dto;
 
-public class PdfRequest {
-    private String documentName;
-    private String documentDescription;
-    private String content;
-    private String author;
+import com.example.demo.model.BasePdf;;
+
+public class PdfRequest extends BasePdf {
+    // You can add request-specific fields or methods here if needed
 
     public PdfRequest() {
+        super();
     }
 
-    public PdfRequest(String documentName, String content, String author) {
-        this.documentName = documentName;
-        this.content = content;
-        this.author = author;
-    }
-
-    public String getDocumentName() {
-        return documentName;
-    }
-
-    public void setDocumentName(String documentName) {
-        this.documentName = documentName;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
+    public PdfRequest( String title, String author, String description, String base64Content) {
+        this.setTitle(title);
+        this.setAuthor(author);
+        this.setDescription(description);
+        this.setBase64Content(base64Content);
     }
 }

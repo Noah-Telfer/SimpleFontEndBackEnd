@@ -6,7 +6,8 @@ services:
       - "8080:8080"
     networks:
       - webnet
-
+    environment:
+      - MONGODB_URI=mongodb://localhost:27017/PDFStore
   frontend:
     build: ./frontend
     ports:
