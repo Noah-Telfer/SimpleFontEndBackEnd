@@ -32,7 +32,6 @@ public class DemoController {
 
     @PostMapping("/pdf")
     public String postMethodName(
-        @RequestParam(value = "id", required = false) String id,
         @RequestBody PdfRequest pdfRequest
         ) {
         //TODO: process POST request

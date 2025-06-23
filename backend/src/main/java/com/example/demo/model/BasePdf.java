@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+
 public class BasePdf {
     private String id;
     private String title;

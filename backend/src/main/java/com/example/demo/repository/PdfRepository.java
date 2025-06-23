@@ -1,16 +1,20 @@
 package com.example.demo.repository;
 import com.example.demo.model.PdfDocument;
-import org.springframework.data.mongodb.repository.MongoRepository; 
+
+import java.util.List;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+
+import com.example.demo.projection.PdfSummaryProjection;
+
 
 public interface PdfRepository extends MongoRepository<PdfDocument, String> {
-
-    // Custom query methods can be defined here if needed
-    // For example, to find PDFs by author or title
-
-    // Example:
-    // List<Pdf> findByAuthor(String author);
-    // List<Pdf> findByTitleContaining(String title);
     
-    // No additional methods are required for basic CRUD operations
+    @Query(value = "{}", fields = "{ 'id' : 1, 'description' : 1, 'title' : 1, 'author' : 1, 'createDateAndTime' : 1, 'updateDateAndTime' : 1 }")
+    List<PdfSummaryProjection> findAllSummaries();
+    
+    List<PdfDocument> findByTitleContainingIgnoreCase(String title);
+
     
 }

@@ -18,30 +18,48 @@ public class PdfService {
     private final PdfRepository pdfRepository;
 
 
+    // Methods used by the /pdf get endpoint
+        public List<PdfSummary> getAllPdfSummaries() {
+        // Fetch all PDF summaries from DB or storage
+        // Example static list:
+        return pdfRepository.findAllSummaries()
+            .stream()
+            .map(projection -> new PdfSummary(
+                projection.getId(),
+                projection.getTitle(),
+                projection.getDescription(),
+                projection.getAuthor(),
+                projection.getCreateDateAndTime()
+                , projection.getUpdateDateAndTime()
+            ))
+            .toList();
+    }
+
+    // Method used by the /pdf get endpoint with id
     public PdfResponse getPdf(String pdfId) {
         
         // Fetch PDF and encode as base64
         PdfResponse response = new PdfResponse();
         // Need to confirm ID is Valid
-
+        PdfDocument pdfDocument = pdfRepository.findById(pdfId)
+            .orElseThrow(() -> new IllegalArgumentException("PDF with ID " + pdfId + " not found"));
         // If valid ID then fetch the PDF details from DB or storage
-
-        // Set the response details based on the fetched PDF
-        response.setBase64("..."); // actual base64
         
+            response.setId(pdfDocument.getId());
+            response.setTitle(pdfDocument.getTitle());
+            response.setAuthor(pdfDocument.getAuthor());
+            response.setDescription(pdfDocument.getDescription());
+            response.setBase64(pdfDocument.getBase64Content());
+            response.setCreateDateAndTime(pdfDocument.getCreateDateAndTime());
+            response.setUpdateDateAndTime(pdfDocument.getUpdateDateAndTime());
+        
+
         return response;
     }
 
-    public List<PdfSummary> getAllPdfSummaries() {
-        // Fetch all PDF summaries from DB or storage
-        // Example static list:
-        return Arrays.asList(
-            new PdfSummary() {{ setId("1"); setDescription("First PDF"); }},
-            new PdfSummary() {{ setId("2"); setDescription("Second PDF"); }}
-        );
-    }
 
-
+    // Method used by the /pdf post endpoint
+    // This method creates a new PDF document based on the provided PdfRequest
     public PdfDocument createPdf(PdfRequest pdfRequest) {
         PdfDocument pdf = new PdfDocument();
         pdf = pdf.toPdfDocument(pdfRequest);
@@ -51,10 +69,29 @@ public class PdfService {
         return pdfRepository.save(pdf);
     }
 
+    // Method used by the /pdf?id= post endpoint
+    public PdfDocument updatePdf(String id, PdfRequest pdfRequest) {
+        Optional<PdfDocument> optionalPdf = pdfRepository.findById(id);
+        if (optionalPdf.isPresent()) {
+            PdfDocument pdf = optionalPdf.get();
+            pdf.setTitle(pdfRequest.getTitle());
+            pdf.setAuthor(pdfRequest.getAuthor());
+            pdf.setDescription(pdfRequest.getDescription());
+            pdf.setBase64Content(pdfRequest.getBase64Content());
+            pdf.setUpdateDateAndTime(new Date());
+            return pdfRepository.save(pdf);
+        } else {
+            throw new IllegalArgumentException("PDF with ID " + id + " not found");
+        }
+    }
+
+    // Dependency injection for PdfRepository
+    // This constructor is used by Spring to inject the PdfRepository bean
     public PdfService(PdfRepository pdfRepository) {
         this.pdfRepository = pdfRepository;
     }
 
+    // Additional methods for managing PDF documents
     public PdfDocument save(PdfDocument pdf) {
         return pdfRepository.save(pdf);
     }
@@ -69,5 +106,9 @@ public class PdfService {
 
     public void deleteById(String id) {
         pdfRepository.deleteById(id);
+    }
+
+    public boolean existsByTitle(String title) {
+        return !pdfRepository.findByTitleContainingIgnoreCase(title).isEmpty();
     }
 }
