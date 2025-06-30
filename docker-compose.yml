@@ -7,7 +7,9 @@ services:
     networks:
       - webnet
     environment:
-      - MONGODB_URI=mongodb://localhost:27017/PDFStore
+      - MONGODB_URI=mongodb://mongo:27017/PDFStore
+    depends_on:
+      - mongo
   frontend:
     build: ./frontend
     ports:
@@ -18,10 +20,11 @@ services:
       - webnet
   mongo:
     image: mongo:latest
-    container_name: simplefrontendbackend-mongo
     ports:
       - "27017:27017"
     volumes:
       - ./mongo-data:/data/db
+    networks:
+      - webnet
 networks:
   webnet:
